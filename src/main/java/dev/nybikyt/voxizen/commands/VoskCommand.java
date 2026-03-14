@@ -19,7 +19,7 @@ public class VoskCommand extends AbstractCommand implements Holdable {
 
     public VoskCommand() {
         setName("vosk");
-        setSyntax("vosk [bytes:<base64>]");
+        setSyntax("vosk [bytes:<base64>|...]");
         setRequiredArguments(1, 1);
         isProcedural = false;
         autoCompile();
@@ -27,7 +27,7 @@ public class VoskCommand extends AbstractCommand implements Holdable {
 
     // <--[command]
     // @Name vosk
-    // @Syntax vosk [bytes:<base64>]
+    // @Syntax vosk [bytes:<base64>|...]
     // @Required 1
     // @Maximum 1
     // @Short Transcribes Opus audio data using Vosk.
