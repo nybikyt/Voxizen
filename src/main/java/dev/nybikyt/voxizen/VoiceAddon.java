@@ -5,7 +5,7 @@ import de.maxhenkel.voicechat.api.VoicechatPlugin;
 import de.maxhenkel.voicechat.api.VoicechatServerApi;
 import de.maxhenkel.voicechat.api.events.EventRegistration;
 import de.maxhenkel.voicechat.api.events.MicrophonePacketEvent;
-import dev.nybikyt.voxizen.events.MicrophoneScriptEvent;
+import dev.nybikyt.voxizen.events.MicrophoneEvent;
 
 public class VoiceAddon implements VoicechatPlugin {
     private static VoicechatServerApi api;
@@ -27,8 +27,8 @@ public class VoiceAddon implements VoicechatPlugin {
     @Override
     public void registerEvents(EventRegistration eventRegistration) {
         eventRegistration.registerEvent(MicrophonePacketEvent.class, event -> {
-            if (!MicrophoneScriptEvent.instance.eventPaths.isEmpty()) {
-                MicrophoneScriptEvent.instance.handle(event);
+            if (!MicrophoneEvent.instance.eventPaths.isEmpty()) {
+                MicrophoneEvent.instance.handle(event);
             }
         });
     }

@@ -6,14 +6,12 @@ import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptEntryData;
-import de.maxhenkel.voicechat.api.VoicechatConnection;
 import de.maxhenkel.voicechat.api.events.MicrophonePacketEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Base64;
 
-public class MicrophoneScriptEvent extends ScriptEvent {
+public class MicrophoneEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
@@ -29,9 +27,9 @@ public class MicrophoneScriptEvent extends ScriptEvent {
     //
     // -->
 
-    public static MicrophoneScriptEvent instance;
+    public static MicrophoneEvent instance;
 
-    public MicrophoneScriptEvent() {
+    public MicrophoneEvent() {
         instance = this;
         registerCouldMatcher("microphone");
     }

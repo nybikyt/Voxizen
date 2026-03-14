@@ -10,16 +10,14 @@ import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgPrefixed;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import dev.nybikyt.voxizen.Voxizen;
-import dev.nybikyt.voxizen.misc.VoskService;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class VoskScriptCommand extends AbstractCommand implements Holdable {
+public class VoskCommand extends AbstractCommand implements Holdable {
 
-    public VoskScriptCommand() {
+    public VoskCommand() {
         setName("vosk");
         setSyntax("vosk [bytes:<base64>]");
         setRequiredArguments(1, 1);
@@ -55,28 +53,28 @@ public class VoskScriptCommand extends AbstractCommand implements Holdable {
         Runnable task = () -> {
             try {
                 String text;
+
                 if (bytes instanceof ListTag list) {
                     List<byte[]> frames = new ArrayList<>();
                     for (ObjectTag entry : list.objectForms) {
                         frames.add(Base64.getDecoder().decode(entry.toString()));
                     }
                     text = Voxizen.getInstance().getVoskService().recognize(frames);
+
                 } else {
                     text = Voxizen.getInstance().getVoskService().recognize(
                             Base64.getDecoder().decode(bytes.toString())
                     );
                 }
-                scriptEntry.saveObject("text", new ElementTag(text));
 
+                scriptEntry.saveObject("text", new ElementTag(text));
             } catch (Exception e) {
                 Debug.echoError(scriptEntry, "Vosk error: " + e.getMessage());
                 scriptEntry.saveObject("text", new ElementTag(""));
-
             } finally {
                 scriptEntry.setFinished(true);
             }
         };
-        Voxizen.getInstance().getServer().getScheduler()
-                .runTaskAsynchronously(Voxizen.getInstance(), task);
+        Voxizen.getInstance().getServer().getScheduler().runTaskAsynchronously(Voxizen.getInstance(), task);
     }
 }
