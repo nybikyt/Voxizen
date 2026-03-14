@@ -1,0 +1,14 @@
+name: Voxizen
+version: '${version}'
+main: dev.nybikyt.voxizen.Voxizen
+author: Nybik_YT
+api-version: '1.21'
+
+dependencies:
+  server:
+    Denizen:
+      required: true
+      load: BEFORE
+    voicechat:
+      required: false
+      load: BEFORE
