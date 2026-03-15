@@ -85,7 +85,7 @@ public class VoiceSourceTag implements ObjectTag {
         this.data = data;
     }
 
-    public String getId()            { return id; }
+    public String getId() { return id; }
     public VoiceSourceData getData() { return data; }
 
 
@@ -112,6 +112,7 @@ public class VoiceSourceTag implements ObjectTag {
         return tagProcessor.getObjectAttribute(this, attribute);
     }
 
+
     public static void register() {
 
         // <--[tag]
@@ -126,34 +127,11 @@ public class VoiceSourceTag implements ObjectTag {
                 (attribute, voiceSource) -> new ElementTag(voiceSource.id)
         );
 
-        // <--[tag]
-        // @attribute <VoiceSourceTag.list>
-        // @returns ListTag(ElementTag)
-        // @description
-        // Returns a ListTag of ids of all currently registered voice sources.
-        // @example
-        // - foreach <voicesource.list> as:sourceId:
-        //     - narrate "Active source: <[sourceId]>"
-        // -->
-
         TagManager.registerTagHandler(ObjectTag.class, "voicesource", attribute -> {
-            if (!attribute.hasParam()) {
-                if (attribute.startsWith("list", 2)) {
-                    attribute.fulfill(2);
-
-                    ListTag result = new ListTag();
-                    for (String sourceId : VoiceSourceCommand.sources.keySet()) {
-                        result.addObject(new ElementTag(sourceId));
-                    }
-                    return result;
-                }
-                return null;
-            }
+            if (!attribute.hasParam()) return null;
 
             VoiceSourceTag voiceSource = VoiceSourceTag.valueOf(attribute.getParam(), attribute.context);
-            if (voiceSource == null) {
-                return null;
-            }
+            if (voiceSource == null) return null;
 
             attribute.fulfill(1);
             return voiceSource.getObjectAttribute(attribute);
@@ -351,8 +329,8 @@ public class VoiceSourceTag implements ObjectTag {
 
     private static String resolveChannelType(VoiceSourceTag voiceSource) {
         if (voiceSource.data.channel() instanceof LocationalAudioChannel) return "locational";
-        if (voiceSource.data.channel() instanceof EntityAudioChannel)     return "entity";
-        if (voiceSource.data.channel() instanceof StaticAudioChannel)     return "static";
+        if (voiceSource.data.channel() instanceof EntityAudioChannel) return "entity";
+        if (voiceSource.data.channel() instanceof StaticAudioChannel) return "static";
         return "unknown";
     }
 }

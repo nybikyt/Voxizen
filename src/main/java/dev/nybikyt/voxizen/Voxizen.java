@@ -5,11 +5,19 @@ import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectFetcher;
 import de.maxhenkel.voicechat.api.BukkitVoicechatService;
 import dev.nybikyt.voxizen.commands.AudioCommand;
+import dev.nybikyt.voxizen.commands.VoiceGroupCommand;
 import dev.nybikyt.voxizen.commands.VoiceSourceCommand;
+import dev.nybikyt.voxizen.commands.VolumeCategoryCommand;
 import dev.nybikyt.voxizen.commands.VoskCommand;
-import dev.nybikyt.voxizen.events.MicrophoneEvent;
+import dev.nybikyt.voxizen.events.GroupCreatedEvent;
+import dev.nybikyt.voxizen.events.GroupRemovedEvent;
+import dev.nybikyt.voxizen.events.PlayerJoinGroupEvent;
+import dev.nybikyt.voxizen.events.PlayerLeaveGroupEvent;
+import dev.nybikyt.voxizen.events.PlayerMicrophoneEvent;
 import dev.nybikyt.voxizen.misc.VoskService;
+import dev.nybikyt.voxizen.objects.VoiceGroupTag;
 import dev.nybikyt.voxizen.objects.VoiceSourceTag;
+import dev.nybikyt.voxizen.properties.ServerTagExtensions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
@@ -38,17 +46,26 @@ public final class Voxizen extends JavaPlugin {
     public void onLoad() {
         instance = this;
 
-        ScriptEvent.registerScriptEvent(MicrophoneEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerMicrophoneEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerJoinGroupEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerLeaveGroupEvent.class);
+        ScriptEvent.registerScriptEvent(GroupCreatedEvent.class);
+        ScriptEvent.registerScriptEvent(GroupRemovedEvent.class);
 
         DenizenCore.commandRegistry.registerCommand(VoskCommand.class);
         DenizenCore.commandRegistry.registerCommand(AudioCommand.class);
         DenizenCore.commandRegistry.registerCommand(VoiceSourceCommand.class);
+        DenizenCore.commandRegistry.registerCommand(VolumeCategoryCommand.class);
+        DenizenCore.commandRegistry.registerCommand(VoiceGroupCommand.class);
 
-        ObjectFetcher.registerWithObjectFetcher(VoiceSourceTag.class, VoiceSourceTag.tagProcessor);
+        ObjectFetcher.registerWithObjectFetcher(VoiceSourceTag.class, VoiceSourceTag.tagProcessor).generateBaseTag();
+        ObjectFetcher.registerWithObjectFetcher(VoiceGroupTag.class, VoiceGroupTag.tagProcessor).generateBaseTag();
     }
 
     @Override
     public void onEnable() {
+        ServerTagExtensions.register();
+
         saveDefaultConfig();
 
         BukkitVoicechatService service = getServer().getServicesManager().load(BukkitVoicechatService.class);
@@ -94,6 +111,9 @@ public final class Voxizen extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        AudioCommand.activeTasks.values().forEach(task -> task.cancel(false));
+        AudioCommand.SCHEDULER.shutdown();
+
         if (voiceAddon != null) {
             getServer().getServicesManager().unregister(voiceAddon);
         }

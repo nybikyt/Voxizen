@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 
-public class MicrophoneEvent extends ScriptEvent {
+public class PlayerMicrophoneEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
@@ -35,17 +35,17 @@ public class MicrophoneEvent extends ScriptEvent {
     //
     // -->
 
-    public static MicrophoneEvent instance;
+    public static PlayerMicrophoneEvent instance;
     private MicrophonePacketEvent microphonePacketEvent;
 
-    public MicrophoneEvent() {
+    public PlayerMicrophoneEvent() {
         instance = this;
-        registerCouldMatcher("microphone");
+        registerCouldMatcher("player microphone");
 
-        this.<MicrophoneEvent, ObjectTag>registerOptionalDetermination("bytes", ObjectTag.class,
-                (microphoneEvent, context, value) -> {
+        this.<PlayerMicrophoneEvent, ObjectTag>registerOptionalDetermination("bytes", ObjectTag.class,
+                (playerMicrophoneEvent, context, value) -> {
                     try {
-                        microphoneEvent.opusData = resolveBytes(value);
+                        playerMicrophoneEvent.opusData = resolveBytes(value);
                         return true;
                     } catch (Exception e) {
                         throw new RuntimeException(e);
