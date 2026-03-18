@@ -47,26 +47,27 @@ public class VolumeCategoryCommand extends AbstractCommand {
     //
     // @Description
     // Creates or deletes a volume category for Simple Voice Chat.
-    // Volume categories let players control the volume of specific audio sources
-    // separately in the Voice Chat GUI.
+    // Volume categories let players control the volume of specific audio sources separately in the Voice Chat GUI.
     //
-    // id          — unique identifier, 1–16 chars, only lowercase a-z and _.
-    // name        — display name shown in the GUI.
-    // icon        — BinaryTag or base64-encoded image. Automatically scaled to 16x16.
+    // id — unique identifier, 1–16 chars, only lowercase a-z and _.
+    // name — display name shown in the GUI.
+    // icon — BinaryTag or base64-encoded image. Automatically scaled to 16x16.
     // description — optional tooltip text.
     // name_translation_key / description_translation_key — i18n keys (optional).
     //
     // Use voicesource command with the category argument to assign a source to a category.
     //
     // @Usage
+    // Create a simple category without an icon.
     // - volumecategory create id:music name:Music description:<element[Background music volume]>
     //
     // @Usage
-    // # From a file
+    // From a file.
     // - ~fileread path:data/icon.png save:file
     // - volumecategory create id:ambient name:Ambient icon:<entry[file].data>
     //
     // @Usage
+    // Delete an existing category.
     // - volumecategory delete id:music
     //
     // -->

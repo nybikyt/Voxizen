@@ -42,7 +42,7 @@ public class VoskCommand extends AbstractCommand implements Holdable {
     // <entry[saveName].text> returns the transcribed text as an ElementTag.
     //
     // @Usage
-    // # Use to transcribe audio from a microphone event.
+    // Use to transcribe audio from a microphone event.
     // on player microphone:
     // - if <context.bytes.is_truthy>:
     //     - flag <player> audio:|:<context.bytes>

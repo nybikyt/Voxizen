@@ -51,29 +51,28 @@ public class AudioCommand extends AbstractCommand implements Holdable {
     // @Group Voxizen
     //
     // @Description
-    // Sends audio to a persistent voice source created by voicesource command,
-    // or flushes and stops it.
+    // Sends audio to a persistent voice source created by voicesource command, or flushes and stops it.
     //
     // bytes — one of:
-    //         BinaryTag (raw WAV bytes) — automatically encoded to Opus asynchronously.
-    //         ListTag of Base64-encoded Opus frames — sent with 20ms interval.
-    //         Single Base64-encoded Opus frame — sent immediately (e.g. from microphone event).
-    //         Required for the PLAY instruction, ignored for STOP.
+    // BinaryTag (raw WAV bytes) — automatically encoded to Opus asynchronously.
+    // ListTag of Base64-encoded Opus frames — sent with 20ms interval.
+    // Single Base64-encoded Opus frame — sent immediately (e.g. from microphone event).
+    // Required for the PLAY instruction, ignored for STOP.
     //
-    // source — a VoiceSourceTag created via voicesource command.
-    //          Determines who hears the audio and from where.
+    // source — a VoiceSourceTag created via voicesource command. Determines who hears the audio and from where.
     //
     // @Usage
-    // # Play a WAV file — encoding and sending happens fully asynchronously.
+    // Play a WAV file — encoding and sending happens fully asynchronously.
     // - ~fileread path:data/song.wav save:read
     // - ~audio play bytes:<entry[read].data> source:<voicesource[some_location]>
     //
     // @Usage
-    // # Send a single frame from a microphone event (no delay needed).
+    // Send a single frame from a microphone event (no delay needed).
     // on player microphone:
     // - audio play bytes:<context.bytes> source:<[src]>
     //
     // @Usage
+    // Stop playback and flush a source.
     // - audio stop source:<voicesource[some_entity]>
     //
     // -->

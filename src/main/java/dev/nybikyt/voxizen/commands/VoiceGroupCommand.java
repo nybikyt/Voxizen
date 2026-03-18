@@ -46,9 +46,9 @@ public class VoiceGroupCommand extends AbstractCommand {
     // Creates or deletes a managed Simple Voice Chat voice group.
     //
     // type — group type. Defaults to normal.
-    //   normal   — group members hear nearby players not in any group.
-    //   open     — group members hear nearby players AND nearby players hear them.
-    //   isolated — group members ONLY hear each other.
+    // > normal — group members hear nearby players not in any group.
+    // > open — group members hear nearby players AND nearby players hear them.
+    // > isolated — group members ONLY hear each other.
     //
     // persistent — if true, the group is not auto-removed when all members leave. Defaults to false.
     //
@@ -59,13 +59,16 @@ public class VoiceGroupCommand extends AbstractCommand {
     // <entry[saveName].id> returns the string id of the created group after a CREATE instruction.
     //
     // @Usage
+    // Create a persistent isolated group and save the result.
     // - voicegroup create id:staff name:Staff type:isolated persistent:true save:result
     // - narrate "Created group: <entry[result].voicegroup>"
     //
     // @Usage
+    // Create a password-protected group.
     // - voicegroup create id:vip name:VIP password:secret123
     //
     // @Usage
+    // Delete an existing group.
     // - voicegroup delete id:staff
     //
     // -->
