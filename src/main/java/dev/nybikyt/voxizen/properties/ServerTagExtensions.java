@@ -48,7 +48,7 @@ public class ServerTagExtensions {
         //
         // @example
         // - foreach <server.voice_sources> as:id:
-        //     - narrate "Source: <[id]>"
+        //     - announce "Source: <[id]>"
         //
         // -->
         instance.tagProcessor.registerStaticTag(ListTag.class, "voice_sources", (attribute, object) -> {
@@ -74,11 +74,10 @@ public class ServerTagExtensions {
         //
         // @example
         // - foreach <server.voice_groups> as:group:
-        //     - narrate "<[group].name> (managed: <[group].managed>)"
+        //     - announce "<[group].name>"
         //
         // -->
         instance.tagProcessor.registerTag(ListTag.class, "voice_groups", (attribute, object) -> {
-            // Fix #5 — guard against null API
             if (VoiceAddon.getApi() == null) return new ListTag();
             ListTag result = new ListTag();
             for (Group group : VoiceAddon.getApi().getGroups()) {

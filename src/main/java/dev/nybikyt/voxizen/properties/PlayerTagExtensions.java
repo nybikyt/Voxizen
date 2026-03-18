@@ -76,6 +76,7 @@ public class PlayerTagExtensions {
         //
         // @mechanism PlayerTag.voice_connected
         //
+        // @description
         // Returns whether the player is actively connected to voice chat.
         // Note: may return false if the connection was disabled via setConnected(false).
         //
@@ -95,6 +96,7 @@ public class PlayerTagExtensions {
         //
         // @returns ElementTag(Boolean)
         //
+        // @description
         // Returns whether the player has the voice chat mod installed.
         //
         // @example
@@ -142,7 +144,7 @@ public class PlayerTagExtensions {
         // Accepts a VoiceGroupTag identity string (e.g. voicegroup@staff) or a plain group id.
         // Specify null or empty to remove the player from their current group.
         //
-        // @Example
+        // @example
         // - adjust <player> voice_group:<voicegroup[vip]>
         //
         // @tags
@@ -185,7 +187,7 @@ public class PlayerTagExtensions {
         // Sets whether the player is connected to voice chat.
         // Note: resets automatically on reconnect or if SVC changes the disconnected state.
         //
-        // @Example
+        // @example
         // - adjust <player> voice_connected:true
         //
         // @tags
@@ -212,7 +214,7 @@ public class PlayerTagExtensions {
         // @description
         // Sets the player's voice chat disabled state.
         //
-        // @Example
+        // @example
         // - adjust <player> voice_disabled:false
         //
         // @tags
