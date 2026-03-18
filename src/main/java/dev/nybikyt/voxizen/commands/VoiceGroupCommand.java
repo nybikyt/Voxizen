@@ -36,7 +36,7 @@ public class VoiceGroupCommand extends AbstractCommand {
 
     // <--[command]
     // @Name voicegroup
-    // @Syntax voicegroup [create/delete] [id:<id>] (name:<n>) (type:isolated/{normal}/open) (password:<password>) (persistent:<boolean>)
+    // @Syntax voicegroup [create/delete] [id:<id>] (name:<name>) (type:isolated/{normal}/open) (password:<password>) (persistent:<boolean>)
     // @Required 2
     // @Maximum 6
     // @Short Creates or deletes a Simple Voice Chat group.

@@ -54,9 +54,9 @@ public class AudioCommand extends AbstractCommand implements Holdable {
     // Sends audio to a persistent voice source created by voicesource command, or flushes and stops it.
     //
     // bytes — one of:
-    // BinaryTag (raw WAV bytes) — automatically encoded to Opus asynchronously.
-    // ListTag of Base64-encoded Opus frames — sent with 20ms interval.
-    // Single Base64-encoded Opus frame — sent immediately (e.g. from microphone event).
+    // > BinaryTag (raw WAV bytes) — automatically encoded to Opus asynchronously.
+    // > ListTag of Base64-encoded Opus frames — sent with 20ms interval.
+    // > Single Base64-encoded Opus frame — sent immediately (e.g. from microphone event).
     // Required for the PLAY instruction, ignored for STOP.
     //
     // source — a VoiceSourceTag created via voicesource command. Determines who hears the audio and from where.

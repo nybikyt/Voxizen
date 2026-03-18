@@ -57,9 +57,8 @@ public class VoiceSourceCommand extends AbstractCommand {
     // no source — static channel (explicit target list, no position).
     //
     // If targets is not specified, no filter is applied:
-    // locational/entity channels are heard by ALL players in range, including players who join after the source was created.
-    //
-    // static channels start with no targets — use mechanism VoiceSourceTag.targets to add listeners later.
+    // > locational/entity channels are heard by ALL players in range, including players who join after the source was created.
+    // > static channels start with no targets — use mechanism VoiceSourceTag.targets to add listeners later.
     //
     // @Tags
     // <entry[saveName].voicesource> returns the created VoiceSourceTag after a CREATE instruction.
