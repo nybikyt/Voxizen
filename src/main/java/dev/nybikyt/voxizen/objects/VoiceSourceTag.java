@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 //
 // @base ElementTag
 //
+// @ExampleTagBase voicesource[radio]
+//
 // @format
 // The identity format for a voice source is voicesource@<id>
 // For example: voicesource@radio

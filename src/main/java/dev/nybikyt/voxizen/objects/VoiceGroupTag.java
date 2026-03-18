@@ -30,6 +30,8 @@ import java.util.UUID;
 //
 // @base ElementTag
 //
+// @ExampleTagBase voicegroup[vip]
+//
 // @format
 // The identity format for a voice group is voicegroup@<id>
 // For managed groups: voicegroup@staff
