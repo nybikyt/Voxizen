@@ -30,7 +30,7 @@ public class PlayerMicrophoneEvent extends ScriptEvent {
     // <context.bytes> returns an ElementTag of the Base64-encoded Opus audio data.
     //
     // @Determine
-    // ElementTag to replace the Opus audio bytes (Base64-encoded)
+    // "ElementTag" to replace the Opus audio bytes (Base64-encoded)
     //
     // @Player Always.
     //

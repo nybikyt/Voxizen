@@ -25,7 +25,7 @@ public class VoiceDistanceEvent extends ScriptEvent {
     // <context.is_whispering> returns an ElementTag(Boolean) of whether the player is whispering.
     //
     // @Determine
-    // ElementTag(Decimal) to set a custom voice distance (e.g. "- determine 10").
+    // "ElementTag(Decimal)" to set a custom voice distance.
     //
     // -->
 

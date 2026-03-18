@@ -26,9 +26,7 @@ public class GroupRemovedEvent extends ScriptEvent {
     // @Triggers when any Simple Voice Chat group is removed (also via the voicegroup command)
     //
     // @Context
-    // <context.group> returns the VoiceGroupTag of the removed group.
-    //   For managed groups the id is the string id (e.g. "staff").
-    //   For unmanaged groups the id is the group's UUID string.
+    // <context.group> returns the VoiceGroupTag of the removed group. For managed groups the id is the string id (e.g. "staff"). For unmanaged groups the id is the group's UUID string.
     //
     // -->
 

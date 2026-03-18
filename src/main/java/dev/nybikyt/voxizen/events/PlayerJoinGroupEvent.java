@@ -25,12 +25,10 @@ public class PlayerJoinGroupEvent extends ScriptEvent {
     // @Triggers when a player joins any Simple Voice Chat group
     //
     // @Context
-    // <context.group> returns a VoiceGroupTag of the group being joined.
-    //   For managed groups the id is the string id (e.g. "staff").
-    //   For unmanaged groups the id is the group's UUID string.
+    // <context.group> returns a VoiceGroupTag of the group being joined. For managed groups the id is the string id (e.g. "staff"). For unmanaged groups the id is the group's UUID string.
     //
     // @Determine
-    // VoiceGroupTag to redirect the player into a different group instead.
+    // "VoiceGroupTag" to redirect the player into a different group instead.
     //
     // @Player Always.
     //

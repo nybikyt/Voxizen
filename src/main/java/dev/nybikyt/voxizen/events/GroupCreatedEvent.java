@@ -29,12 +29,9 @@ public class GroupCreatedEvent extends ScriptEvent {
     // @Triggers when any Simple Voice Chat group is created (also via the voicegroup command)
     //
     // @Context
-    // <context.group> returns the VoiceGroupTag of the created group.
-    //   For managed groups the id is the string id (e.g. "staff").
-    //   For unmanaged groups the id is the group's UUID string.
+    // <context.group> returns the VoiceGroupTag of the created group. For managed groups the id is the string id (e.g. "staff"). For unmanaged groups the id is the group's UUID string.
     //
-    // <context.creator> returns the PlayerTag of the player who created the group,
-    //   or null if the group was created via the voicegroup command.
+    // <context.creator> returns the PlayerTag of the player who created the group, or null if the group was created via the voicegroup command.
     //
     // -->
 

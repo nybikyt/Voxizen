@@ -24,9 +24,7 @@ public class PlayerLeaveGroupEvent extends ScriptEvent {
     // @Triggers when a player leaves any Simple Voice Chat group
     //
     // @Context
-    // <context.group> returns a VoiceGroupTag of the group being left.
-    //   For managed groups the id is the string id (e.g. "staff").
-    //   For unmanaged groups the id is the group's UUID string.
+    // <context.group> returns a VoiceGroupTag of the group being left. For managed groups the id is the string id (e.g. "staff"). For unmanaged groups the id is the group's UUID string.
     //
     // @Player Always.
     //
