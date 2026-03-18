@@ -17,7 +17,7 @@ public class PlayerMicrophoneEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
-    // microphone
+    // player microphone
     //
     // @Group Voxizen
     //
@@ -30,8 +30,9 @@ public class PlayerMicrophoneEvent extends ScriptEvent {
     // <context.bytes> returns an ElementTag of the Base64-encoded Opus audio data.
     //
     // @Determine
-    // "cancelled" to cancel the packet (stop it from being sent).
-    // ElementTag to replace the Opus audio bytes (Base64-encoded) with "BYTES:<base64>".
+    // ElementTag to replace the Opus audio bytes (Base64-encoded)
+    //
+    // @Player Always.
     //
     // -->
 
@@ -42,7 +43,7 @@ public class PlayerMicrophoneEvent extends ScriptEvent {
         instance = this;
         registerCouldMatcher("player microphone");
 
-        this.<PlayerMicrophoneEvent, ObjectTag>registerOptionalDetermination("bytes", ObjectTag.class,
+        this.<PlayerMicrophoneEvent, ObjectTag>registerOptionalDetermination(null, ObjectTag.class,
                 (playerMicrophoneEvent, context, value) -> {
                     try {
                         playerMicrophoneEvent.opusData = resolveBytes(value);

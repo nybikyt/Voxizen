@@ -14,14 +14,19 @@ public class ServerTagExtensions {
 
     public static void register() {
 
+
         // <--[tag]
         // @attribute <server.volume_categories>
+        //
         // @returns ListTag(ElementTag)
+        //
         // @description
         // Returns a sorted list of all registered volume category IDs.
+        //
         // @example
         // - foreach <server.volume_categories> as:id:
-        //     - narrate "Category: <[id]>"
+        //     - announce "Category: <[id]>"
+        //
         // -->
         instance.tagProcessor.registerStaticTag(ListTag.class, "volume_categories", (attribute, object) -> {
             ListTag result = new ListTag();
@@ -35,12 +40,16 @@ public class ServerTagExtensions {
 
         // <--[tag]
         // @attribute <server.voice_sources>
+        //
         // @returns ListTag(ElementTag)
+        //
         // @description
         // Returns a sorted list of all active voice source IDs (created via voicesource command).
+        //
         // @example
         // - foreach <server.voice_sources> as:id:
         //     - narrate "Source: <[id]>"
+        //
         // -->
         instance.tagProcessor.registerStaticTag(ListTag.class, "voice_sources", (attribute, object) -> {
             ListTag result = new ListTag();
@@ -52,16 +61,21 @@ public class ServerTagExtensions {
             return result;
         });
 
+
         // <--[tag]
         // @attribute <server.voice_groups>
+        //
         // @returns ListTag(VoiceGroupTag)
+        //
         // @description
         // Returns a list of all voice groups on the server, including unmanaged (player-created) ones.
         // Managed groups are identified by their string id, unmanaged ones by their UUID.
         // Returns an empty list if the voice chat API is not yet ready.
+        //
         // @example
         // - foreach <server.voice_groups> as:group:
         //     - narrate "<[group].name> (managed: <[group].managed>)"
+        //
         // -->
         instance.tagProcessor.registerTag(ListTag.class, "voice_groups", (attribute, object) -> {
             // Fix #5 — guard against null API

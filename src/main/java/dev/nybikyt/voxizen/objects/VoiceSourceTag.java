@@ -25,15 +25,20 @@ import java.util.stream.Collectors;
 
 // <--[ObjectType]
 // @name VoiceSourceTag
+//
 // @prefix voicesource
+//
 // @base ElementTag
+//
 // @format
 // The identity format for a voice source is voicesource@<id>
-// For example: voicesource@myradio
+// For example: voicesource@radio
 //
 // @description
-// Represents a persistent Simple Voice Chat audio channel created
-// by the <@link command voicesource> command.
+// Represents a persistent Simple Voice Chat audio channel
+// created by the voicesource command.
+// Supports locational, entity, and static channel types.
+//
 // -->
 
 public class VoiceSourceTag implements ObjectTag {
@@ -48,7 +53,6 @@ public class VoiceSourceTag implements ObjectTag {
         return VoiceSourceCommand.sources.containsKey(id);
     }
 
-    /** Dummy singleton used for static tags like <voicesource.list> that don't need a real instance. */
     public static final VoiceSourceTag STATIC = new VoiceSourceTag(null, null);
 
     @Fetchable("voicesource")
@@ -117,11 +121,15 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceSourceTag.id>
+        //
         // @returns ElementTag
+        //
         // @description
         // Returns the string id used to reference this voice source.
+        //
         // @example
-        // - narrate "Playing on source: <context.source.id>"
+        // - narrate "Playing on source: <[source].id>"
+        //
         // -->
         tagProcessor.registerTag(ElementTag.class, "id",
                 (attribute, voiceSource) -> new ElementTag(voiceSource.id)
@@ -139,14 +147,18 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceSourceTag.source>
+        //
         // @returns LocationTag / EntityTag
+        //
         // @description
         // Returns the underlying source object of this channel:
         //   LocationTag for locational channels, EntityTag for entity channels.
         // Returns null for static channels — use || as a fallback or check .type first.
+        //
         // @example
-        // - if <context.source.type> == locational:
-        //     - narrate "Broadcasting from <context.source.source>"
+        // - if <[source].type> == locational:
+        //     - narrate "Broadcasting from location (<[source].source>)"
+        //
         // -->
         tagProcessor.registerTag(ObjectTag.class, "source",
                 (attribute, voiceSource) -> {
@@ -162,12 +174,16 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceSourceTag.type>
+        //
         // @returns ElementTag
+        //
         // @description
         // Returns the channel type: locational, entity, or static.
+        //
         // @example
-        // - if <context.source.type> == static:
+        // - if <[source].type> == static:
         //     - narrate "This is a broadcast channel."
+        //
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "type",
                 (attribute, voiceSource) -> new ElementTag(resolveChannelType(voiceSource))
@@ -175,13 +191,18 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceSourceTag.distance>
+        //
         // @returns ElementTag(Decimal)
+        //
         // @mechanism VoiceSourceTag.distance
+        //
         // @description
         // Returns the hearing distance for locational and entity channels.
         // Returns null for static channels — use || as a fallback.
+        //
         // @example
-        // - narrate "Audible within <context.source.distance||0> blocks"
+        // - narrate "Audible within <[source].distance||0> blocks"
+        //
         // -->
         tagProcessor.registerTag(ElementTag.class, "distance",
                 (attribute, voiceSource) -> {
@@ -200,14 +221,19 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceSourceTag.targets>
+        //
         // @returns ListTag(PlayerTag)
+        //
         // @mechanism VoiceSourceTag.targets
+        //
         // @description
         // Returns a ListTag of currently targeted online players.
         // Players who went offline are silently omitted from the result.
+        //
         // @example
-        // - foreach <context.source.targets> as:listener:
-        //     - narrate target:<[listener]> "You are listening to the broadcast."
+        // - foreach <[source].targets> as:listener:
+        //     - narrate targets:<[listener]> "You are listening to the broadcast."
+        //
         // -->
         tagProcessor.registerTag(ListTag.class, "targets",
                 (attribute, voiceSource) -> {
@@ -224,12 +250,17 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceSourceTag.category>
+        //
         // @returns ElementTag
+        //
         // @mechanism VoiceSourceTag.category
+        //
         // @description
         // Returns the audio category of this voice source, or null if none is set.
+        //
         // @example
-        // - narrate "Category: <context.source.category||none>"
+        // - narrate "Category: <[source].category||none>"
+        //
         // -->
         tagProcessor.registerTag(ElementTag.class, "category",
                 (attribute, voiceSource) -> {
@@ -246,16 +277,23 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[mechanism]
         // @object VoiceSourceTag
+        //
         // @name targets
+        //
         // @input ListTag(PlayerTag)
+        //
         // @description
         // Replaces the full target list of this voice source.
         // For locational and entity channels the filter predicate is rebuilt.
         // For static channels old targets are removed and new ones are added.
+        // Offline players are silently skipped.
+        //
         // @tags
         // <VoiceSourceTag.targets>
-        // @example
-        // - adjust <context.source> targets:<server.online_players>
+        //
+        // @Example
+        // - adjust <[source]> targets:<server.online_players>
+        //
         // -->
         tagProcessor.registerMechanism("targets", false, ListTag.class, (voiceSource, mechanism, input) -> {
             List<VoicechatConnection> newConnections = input.stream()
@@ -290,15 +328,21 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[mechanism]
         // @object VoiceSourceTag
+        //
         // @name distance
+        //
         // @input ElementTag(Decimal)
+        //
         // @description
         // Sets the hearing distance for locational or entity channels.
         // Has no effect on static channels — an error is logged instead.
+        //
         // @tags
         // <VoiceSourceTag.distance>
-        // @example
-        // - adjust <context.source> distance:32
+        //
+        // @Example
+        // - adjust <[source]> distance:32
+        //
         // -->
         tagProcessor.registerMechanism("distance", false, ElementTag.class, (voiceSource, mechanism, input) -> {
             float distance = input.asFloat();
@@ -313,14 +357,20 @@ public class VoiceSourceTag implements ObjectTag {
 
         // <--[mechanism]
         // @object VoiceSourceTag
+        //
         // @name category
+        //
         // @input ElementTag
+        //
         // @description
         // Sets the audio category of this voice source.
+        //
         // @tags
         // <VoiceSourceTag.category>
-        // @example
-        // - adjust <context.source> category:music
+        //
+        // @Example
+        // - adjust <[source]> category:music
+        //
         // -->
         tagProcessor.registerMechanism("category", false, ElementTag.class, (voiceSource, mechanism, input) ->
                 voiceSource.data.channel().setCategory(input.asString())

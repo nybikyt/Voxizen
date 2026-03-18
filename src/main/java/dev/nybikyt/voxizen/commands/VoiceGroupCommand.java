@@ -20,10 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class VoiceGroupCommand extends AbstractCommand {
 
-    /** managed id → data */
     public static final Map<String, VoiceGroupData> groups = new ConcurrentHashMap<>();
 
-    /** reverse index: SVC UUID → managed id. Kept in sync with groups map. Fix #7 — O(1) findGroupId. */
     public static final Map<UUID, String> uuidToId = new ConcurrentHashMap<>();
 
     public enum Instruction { CREATE, DELETE }
@@ -56,8 +54,9 @@ public class VoiceGroupCommand extends AbstractCommand {
     //
     // password — optional password for the group.
     //
-    // @Save voicegroup
-    // Returns the created VoiceGroupTag and the id ElementTag after a CREATE instruction.
+    // @Tags
+    // <entry[saveName].voicegroup> returns the created VoiceGroupTag after a CREATE instruction.
+    // <entry[saveName].id> returns the string id of the created group after a CREATE instruction.
     //
     // @Usage
     // - voicegroup create id:staff name:Staff type:isolated persistent:true save:result
@@ -131,7 +130,6 @@ public class VoiceGroupCommand extends AbstractCommand {
             return;
         }
 
-        // Fix #1 — suppress SVC CreateGroupEvent echo before it fires
         GroupCreatedEvent.instance.markCommandInitiated(group.getId());
 
         VoiceGroupData data = new VoiceGroupData(group, rawPassword);
@@ -142,7 +140,6 @@ public class VoiceGroupCommand extends AbstractCommand {
         GroupCreatedEvent.instance.handleFromCommand(tag);
 
         if (!groups.containsKey(groupId)) {
-            // Cancelled — clean up
             uuidToId.remove(group.getId());
             return;
         }
@@ -173,7 +170,6 @@ public class VoiceGroupCommand extends AbstractCommand {
             return;
         }
 
-        // Fix #4 — mark BEFORE kicking so SVC RemoveGroupEvent echo is already suppressed
         GroupRemovedEvent.instance.markCommandInitiated(groupUuid);
 
         for (org.bukkit.entity.Player player : Bukkit.getOnlinePlayers()) {
@@ -191,11 +187,6 @@ public class VoiceGroupCommand extends AbstractCommand {
     }
 
 
-    /**
-     * Rebuilds a managed group with updated properties and migrates all current members.
-     * Fix #2/#3 — suppresses SVC echo events and removes old persistent group.
-     * Returns the new tag, or null on failure.
-     */
     public static VoiceGroupTag rebuildGroup(
             String groupId,
             String name,
@@ -246,21 +237,20 @@ public class VoiceGroupCommand extends AbstractCommand {
 
     public static Group.Type resolveType(String raw) {
         return switch (raw.toLowerCase()) {
-            case "normal"   -> Group.Type.NORMAL;
-            case "open"     -> Group.Type.OPEN;
+            case "normal" -> Group.Type.NORMAL;
+            case "open" -> Group.Type.OPEN;
             case "isolated" -> Group.Type.ISOLATED;
-            default         -> null;
+            default -> null;
         };
     }
 
     public static String resolveTypeName(Group.Type type) {
-        if (type == Group.Type.NORMAL)   return "normal";
-        if (type == Group.Type.OPEN)     return "open";
+        if (type == Group.Type.NORMAL) return "normal";
+        if (type == Group.Type.OPEN) return "open";
         if (type == Group.Type.ISOLATED) return "isolated";
         return "unknown";
     }
 
-    /** Fix #7 — O(1) lookup via reverse index. Returns null if unmanaged. */
     public static String findGroupId(UUID groupUuid) {
         return uuidToId.get(groupUuid);
     }

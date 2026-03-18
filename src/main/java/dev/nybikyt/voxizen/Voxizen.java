@@ -102,7 +102,7 @@ public final class Voxizen extends JavaPlugin {
                 } else {
                     voskService = new VoskService(modelName, null);
                 }
-                LOGGER.info("Vosk ready!");
+                LOGGER.info("Vosk ready! Join our Discord: https://dsc.gg/dsng");
             } catch (Exception exception) {
                 LOGGER.error("Failed to load Vosk: {}", exception.getMessage());
             }

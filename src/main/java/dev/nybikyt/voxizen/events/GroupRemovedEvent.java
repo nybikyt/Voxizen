@@ -15,7 +15,7 @@ public class GroupRemovedEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
-    // group removed
+    // voice group removed
     //
     // @Group Voxizen
     //
@@ -23,32 +23,24 @@ public class GroupRemovedEvent extends ScriptEvent {
     //
     // @Switch id:<id> to only fire for a specific managed group id.
     //
-    // @Triggers when any Simple Voice Chat group is removed —
-    // both via the voicegroup command and automatically by SVC (e.g. all members left a non-persistent group).
+    // @Triggers when any Simple Voice Chat group is removed (also via the voicegroup command)
     //
     // @Context
     // <context.group> returns the VoiceGroupTag of the removed group.
     //   For managed groups the id is the string id (e.g. "staff").
     //   For unmanaged groups the id is the group's UUID string.
     //
-    // @Determine
-    // "cancelled" to cancel the removal.
-    //   For managed groups removed via command: keeps the group in the registry.
-    //   For API-driven removals: cancels the SVC RemoveGroupEvent.
-    //   Note: cancelling SVC auto-removal of non-persistent groups may be unreliable
-    //   depending on SVC internals.
-    //
     // -->
 
     public static GroupRemovedEvent instance;
     private VoiceGroupTag group;
 
-    /** Fix #4 — UUIDs removed by our command, suppresses SVC RemoveGroupEvent echo. */
     private final Set<UUID> commandInitiated = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public GroupRemovedEvent() {
         instance = this;
-        registerCouldMatcher("group removed");
+        registerCouldMatcher("voice group removed");
+        registerSwitches("id");
     }
 
     public void markCommandInitiated(UUID uuid) {

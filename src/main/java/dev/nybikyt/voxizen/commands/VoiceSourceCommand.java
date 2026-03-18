@@ -19,8 +19,6 @@ import de.maxhenkel.voicechat.api.audiochannel.StaticAudioChannel;
 import dev.nybikyt.voxizen.VoiceAddon;
 import dev.nybikyt.voxizen.objects.VoiceSourceTag;
 import dev.nybikyt.voxizen.records.VoiceSourceData;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -52,33 +50,33 @@ public class VoiceSourceCommand extends AbstractCommand {
     //
     // @Description
     // Creates or deletes a persistent Voice Chat audio channel.
-    // Use <@link command audio> with the same source to send audio to it.
+    // Use audio command with the same source to send audio to it.
     //
-    // source:LocationTag — locational channel (positional audio in the world).
-    // source:EntityTag   — entity channel (follows the entity).
-    // no source          — static channel (explicit target list, no position).
+    // source:<LocationTag> — locational channel (positional audio in the world).
+    // source:<EntityTag>   — entity channel (follows the entity).
+    // no source            — static channel (explicit target list, no position).
     //
     // If targets is not specified, no filter is applied:
     //   - locational/entity channels are heard by ALL players in range, including
     //     players who join after the source was created.
-    //   - static channels start with no targets — use <@link mechanism VoiceSourceTag.targets>
+    //   - static channels start with no targets — use mechanism VoiceSourceTag.targets
     //     to add listeners later.
     //
-    // @Save voicesource
-    // Returns the created VoiceSourceTag after a CREATE instruction.
+    // @Tags
+    // <entry[saveName].voicesource> returns the created VoiceSourceTag after a CREATE instruction.
+    // <entry[saveName].id> returns the created VoiceSourceTag's id after a CREATE instruction.
     //
     // @Usage
     // # Open broadcast — anyone in range hears it, even after joining.
-    // - voicesource create id:myradio source:<player.location> distance:20
-    //   save:created
+    // - voicesource create id:some_location source:<player.location> distance:20 save:created
     // - narrate "Created: <entry[created].voicesource>"
     //
     // @Usage
-    // # Restricted broadcast — only listed players hear it.
-    // - voicesource create id:vip_radio source:<player.location> distance:20 targets:<server.online_players>
+    // # Restricted broadcast — only specified players hear it.
+    // - voicesource create id:radio source:<player.location> distance:20 targets:<[some_players]>
     //
     // @Usage
-    // - voicesource delete id:myradio
+    // - voicesource delete id:vip
     //
     // -->
 

@@ -13,7 +13,7 @@ public class PlayerLeaveGroupEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
-    // player leaves group
+    // player leaves voice group
     //
     // @Group Voxizen
     //
@@ -21,16 +21,14 @@ public class PlayerLeaveGroupEvent extends ScriptEvent {
     //
     // @Switch id:<id> to only fire for a specific managed group id.
     //
-    // @Triggers when a player leaves any Simple Voice Chat group —
-    // both managed (created via voicegroup command) and unmanaged (player-created via SVC UI).
+    // @Triggers when a player leaves any Simple Voice Chat group
     //
     // @Context
     // <context.group> returns a VoiceGroupTag of the group being left.
     //   For managed groups the id is the string id (e.g. "staff").
     //   For unmanaged groups the id is the group's UUID string.
     //
-    // @Determine
-    // "cancelled" to prevent the player from leaving.
+    // @Player Always.
     //
     // -->
 
@@ -41,7 +39,8 @@ public class PlayerLeaveGroupEvent extends ScriptEvent {
 
     public PlayerLeaveGroupEvent() {
         instance = this;
-        registerCouldMatcher("player leaves group");
+        registerCouldMatcher("player leaves voice group");
+        registerSwitches("id");
     }
 
     @Override

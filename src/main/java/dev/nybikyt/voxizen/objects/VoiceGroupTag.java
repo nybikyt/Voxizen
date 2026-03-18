@@ -25,8 +25,11 @@ import java.util.UUID;
 
 // <--[ObjectType]
 // @name VoiceGroupTag
+//
 // @prefix voicegroup
+//
 // @base ElementTag
+//
 // @format
 // The identity format for a voice group is voicegroup@<id>
 // For managed groups: voicegroup@staff
@@ -34,8 +37,9 @@ import java.util.UUID;
 //
 // @description
 // Represents a Simple Voice Chat group.
-// Managed groups are created via the <@link command voicegroup> command and have a string id.
+// Managed groups are created via the voicegroup command and have a string id.
 // Unmanaged groups are created by players via the SVC interface and use a UUID as id.
+//
 // -->
 
 public class VoiceGroupTag implements ObjectTag {
@@ -55,7 +59,6 @@ public class VoiceGroupTag implements ObjectTag {
         }
     }
 
-    /** Wraps any API Group object into a VoiceGroupTag — managed or unmanaged. */
     public static VoiceGroupTag fromApiGroup(Group group) {
         String managedId = VoiceGroupCommand.findGroupId(group.getId());
         if (managedId != null) {
@@ -71,11 +74,9 @@ public class VoiceGroupTag implements ObjectTag {
         String id = input.startsWith("voicegroup@") ? input.substring("voicegroup@".length()) : input;
         if (id.isEmpty()) return null;
 
-        // Managed group
         VoiceGroupData data = VoiceGroupCommand.groups.get(id);
         if (data != null) return new VoiceGroupTag(id, data);
 
-        // Fix #5 — guard against null API before unmanaged lookup
         if (VoiceAddon.getApi() == null) {
             if (context == null || context.showErrors()) {
                 Debug.echoError("VoiceGroupTag.valueOf: voice group '" + id + "' does not exist (API not ready).");
@@ -83,7 +84,6 @@ public class VoiceGroupTag implements ObjectTag {
             return null;
         }
 
-        // Unmanaged group — look up by UUID via API
         try {
             UUID uuid = UUID.fromString(id);
             Group group = VoiceAddon.getApi().getGroup(uuid);
@@ -109,7 +109,6 @@ public class VoiceGroupTag implements ObjectTag {
     public String getId() { return id; }
     public VoiceGroupData getData() { return data; }
 
-    /** True if this group was created via the voicegroup command. */
     public boolean isManaged() {
         return VoiceGroupCommand.groups.containsKey(id);
     }
@@ -132,9 +131,16 @@ public class VoiceGroupTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceGroupTag.id>
+        //
         // @returns ElementTag
+        //
         // @description
         // Returns the string id of this group (managed) or UUID string (unmanaged).
+        //
+        // @example
+        // # Returns "my_group"
+        // - narrate "Group id is: <voicegroup[my_group].id>!"
+        //
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "id",
                 (attribute, group) -> new ElementTag(group.id)
@@ -142,23 +148,37 @@ public class VoiceGroupTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceGroupTag.name>
+        //
         // @returns ElementTag
+        //
         // @mechanism VoiceGroupTag.name
+        //
         // @description
         // Returns the display name of this voice group.
+        //
+        // @example
+        // - narrate "Group name is: <voicegroup[my_group].name>!"
+        //
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "name",
                 (attribute, group) -> new ElementTag(group.data.group().getName())
         );
 
+
         // <--[tag]
         // @attribute <VoiceGroupTag.password>
+        //
         // @returns ElementTag
+        //
         // @mechanism VoiceGroupTag.password
+        //
         // @description
         // Returns the password of this voice group, or null if none is set.
         // Only available for managed groups — use .has_password for unmanaged ones.
-        // Use || to provide a fallback: <context.group.password||none>
+        //
+        // @example
+        // - narrate "Secret password is: <voicegroup[vip].password||none>!"
+        //
         // -->
         tagProcessor.registerTag(ElementTag.class, "password",
                 (attribute, group) -> {
@@ -175,20 +195,34 @@ public class VoiceGroupTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceGroupTag.has_password>
+        //
         // @returns ElementTag(Boolean)
+        //
         // @description
         // Returns whether this group has a password. Works for both managed and unmanaged groups.
+        //
+        // @example
+        // - narrate "Vip group has password: <voicegroup[vip].has_password>!"
+        //
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "has_password",
                 (attribute, group) -> new ElementTag(group.data.group().hasPassword())
         );
 
+
         // <--[tag]
         // @attribute <VoiceGroupTag.type>
+        //
         // @returns ElementTag
+        //
         // @mechanism VoiceGroupTag.type
+        //
         // @description
         // Returns the type of this voice group: normal, open, or isolated.
+        //
+        // @example
+        // - narrate "Vip group type is: <voicegroup[vip].type>!"
+        //
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "type",
                 (attribute, group) -> new ElementTag(VoiceGroupCommand.resolveTypeName(group.data.group().getType()))
@@ -196,33 +230,56 @@ public class VoiceGroupTag implements ObjectTag {
 
         // <--[tag]
         // @attribute <VoiceGroupTag.persistent>
+        //
         // @returns ElementTag(Boolean)
+        //
         // @mechanism VoiceGroupTag.persistent
+        //
         // @description
         // Returns whether this group is persistent (survives with no members).
+        //
+        // @example
+        // - narrate "Vip group is persistent: <voicegroup[vip].persistent>!"
+        //
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "persistent",
                 (attribute, group) -> new ElementTag(group.data.group().isPersistent())
         );
 
+
         // <--[tag]
         // @attribute <VoiceGroupTag.managed>
+        //
         // @returns ElementTag(Boolean)
+        //
         // @description
         // Returns whether this group was created via the voicegroup command.
         // Unmanaged groups are created by players through the SVC interface.
+        //
+        // @example
+        // - narrate "Vip group is managed: <voicegroup[vip].managed>!"
+        //
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "managed",
                 (attribute, group) -> new ElementTag(group.isManaged())
         );
 
+
         // <--[tag]
         // @attribute <VoiceGroupTag.members>
+        //
         // @returns ListTag(PlayerTag)
+        //
         // @mechanism VoiceGroupTag.members
+        //
         // @description
         // Returns a ListTag of all online players currently in this group.
         // Works for both managed and unmanaged groups.
+        //
+        // @example
+        // - foreach <voicegroup[vip].members> as__player:
+        //     - narrate "You are a vip person!"
+        //
         // -->
         tagProcessor.registerTag(ListTag.class, "members",
                 (attribute, group) -> {
@@ -252,12 +309,20 @@ public class VoiceGroupTag implements ObjectTag {
 
         // <--[mechanism]
         // @object VoiceGroupTag
+        //
         // @name name
+        //
         // @input ElementTag
+        //
         // @description
         // Sets the display name of this voice group. Only works for managed groups.
+        //
         // @tags
         // <VoiceGroupTag.name>
+        //
+        // @Example
+        // - adjust <voicegroup[vip]> name:<element[Very Important Persons]>
+        //
         // -->
         tagProcessor.registerMechanism("name", false, ElementTag.class, (group, mechanism, input) -> {
             if (!requireManaged(group, mechanism)) return;
@@ -267,14 +332,23 @@ public class VoiceGroupTag implements ObjectTag {
                     current.group().getType(), current.password(), current.group().isPersistent());
         });
 
+
         // <--[mechanism]
         // @object VoiceGroupTag
+        //
         // @name password
+        //
         // @input ElementTag
+        //
         // @description
         // Sets or clears the password. Provide <empty> to remove. Only works for managed groups.
+        //
         // @tags
         // <VoiceGroupTag.password>
+        //
+        // @Example
+        // - adjust <voicegroup[vip]> password:secret123
+        //
         // -->
         tagProcessor.registerMechanism("password", false, ElementTag.class, (group, mechanism, input) -> {
             if (!requireManaged(group, mechanism)) return;
@@ -285,14 +359,24 @@ public class VoiceGroupTag implements ObjectTag {
                     current.group().getType(), newPassword, current.group().isPersistent());
         });
 
+
         // <--[mechanism]
         // @object VoiceGroupTag
+        //
         // @name type
+        //
         // @input ElementTag
+        //
         // @description
         // Sets the group type (normal, open, isolated). Only works for managed groups.
+        //
         // @tags
         // <VoiceGroupTag.type>
+        //
+        // @Example
+        // # Isolated - group members ONLY hear each other.
+        // - adjust <voicegroup[vip]> type:isolated
+        //
         // -->
         tagProcessor.registerMechanism("type", false, ElementTag.class, (group, mechanism, input) -> {
             if (!requireManaged(group, mechanism)) return;
@@ -306,12 +390,20 @@ public class VoiceGroupTag implements ObjectTag {
 
         // <--[mechanism]
         // @object VoiceGroupTag
+        //
         // @name persistent
+        //
         // @input ElementTag(Boolean)
+        //
         // @description
         // Sets whether this group is persistent. Only works for managed groups.
+        //
         // @tags
         // <VoiceGroupTag.persistent>
+        //
+        // @Example
+        // - adjust <voicegroup[vip]> persistent:true
+        //
         // -->
         tagProcessor.registerMechanism("persistent", false, ElementTag.class, (group, mechanism, input) -> {
             if (!requireManaged(group, mechanism)) return;
@@ -321,16 +413,25 @@ public class VoiceGroupTag implements ObjectTag {
                     current.group().getType(), current.password(), input.asBoolean());
         });
 
+
         // <--[mechanism]
         // @object VoiceGroupTag
+        //
         // @name members
+        //
         // @input ListTag(PlayerTag)
+        //
         // @description
         // Replaces the member list. Works for both managed and unmanaged groups.
         // Players not in the list are removed, players in the list are added.
         // Offline players are silently skipped.
+        //
         // @tags
         // <VoiceGroupTag.members>
+        //
+        // @Example
+        // - adjust <voicegroup[vip]> members:<server.online_ops>
+        //
         // -->
         tagProcessor.registerMechanism("members", false, ListTag.class, (group, mechanism, input) -> {
             Set<UUID> newUuids = new HashSet<>();

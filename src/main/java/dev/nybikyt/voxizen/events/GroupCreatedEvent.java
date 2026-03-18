@@ -1,10 +1,13 @@
 package dev.nybikyt.voxizen.events;
 
+import com.denizenscript.denizen.objects.PlayerTag;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import de.maxhenkel.voicechat.api.events.CreateGroupEvent;
+import dev.nybikyt.voxizen.VoiceAddon;
 import dev.nybikyt.voxizen.commands.VoiceGroupCommand;
 import dev.nybikyt.voxizen.objects.VoiceGroupTag;
+import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.Set;
@@ -15,7 +18,7 @@ public class GroupCreatedEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
-    // group created
+    // voice group created
     //
     // @Group Voxizen
     //
@@ -23,34 +26,28 @@ public class GroupCreatedEvent extends ScriptEvent {
     //
     // @Switch id:<id> to only fire for a specific managed group id.
     //
-    // @Triggers when any Simple Voice Chat group is created —
-    // both via the voicegroup command and via the SVC player interface.
+    // @Triggers when any Simple Voice Chat group is created (also via the voicegroup command)
     //
     // @Context
     // <context.group> returns the VoiceGroupTag of the created group.
     //   For managed groups the id is the string id (e.g. "staff").
     //   For unmanaged groups the id is the group's UUID string.
     //
-    // @Determine
-    // "cancelled" to cancel the creation.
-    //   For managed groups: also removes the group from the registry.
-    //   For unmanaged groups: cancels the SVC CreateGroupEvent.
+    // <context.creator> returns the PlayerTag of the player who created the group,
+    //   or null if the group was created via the voicegroup command.
     //
     // -->
 
     public static GroupCreatedEvent instance;
     private VoiceGroupTag group;
+    private PlayerTag creator;
 
-    /** Fix #1 — UUIDs created by our command, suppresses SVC CreateGroupEvent echo. */
     private final Set<UUID> commandInitiated = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public GroupCreatedEvent() {
         instance = this;
-        registerCouldMatcher("group created");
-    }
-
-    public void markCommandInitiated(UUID uuid) {
-        commandInitiated.add(uuid);
+        registerCouldMatcher("voice group created");
+        registerSwitches("id");
     }
 
     @Override
@@ -59,30 +56,40 @@ public class GroupCreatedEvent extends ScriptEvent {
         return super.matches(path);
     }
 
+    public void markCommandInitiated(UUID uuid) {
+        commandInitiated.add(uuid);
+    }
+
     @Override
     public ObjectTag getContext(String name) {
         return switch (name) {
             case "group" -> group;
+            case "creator" -> creator;
             default -> super.getContext(name);
         };
     }
 
-    /** Called from VoiceGroupCommand after a managed group is created. */
     public void handleFromCommand(VoiceGroupTag tag) {
         this.group = tag;
+        this.creator = null;
         fire();
 
         if (cancelled) {
+            GroupRemovedEvent.instance.markCommandInitiated(tag.getData().group().getId());
             VoiceGroupCommand.groups.remove(tag.getId());
+            VoiceGroupCommand.uuidToId.remove(tag.getData().group().getId());
+            VoiceAddon.getApi().removeGroup(tag.getData().group().getId());
         }
     }
 
-    /** Called from VoiceAddon when SVC fires a CreateGroupEvent (any group, including player-created). */
     public void handleFromApi(CreateGroupEvent event) {
-        // Fix #1 — skip if this creation was initiated by our command
         if (commandInitiated.remove(event.getGroup().getId())) return;
 
         this.group = VoiceGroupTag.fromApiGroup(event.getGroup());
+        this.creator = event.getConnection() != null
+                ? new PlayerTag((Player) event.getConnection().getPlayer().getPlayer())
+                : null;
+
         fire();
 
         if (cancelled) {

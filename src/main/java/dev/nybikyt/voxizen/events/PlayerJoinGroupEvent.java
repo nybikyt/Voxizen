@@ -14,7 +14,7 @@ public class PlayerJoinGroupEvent extends ScriptEvent {
 
     // <--[event]
     // @Events
-    // player joins group
+    // player joins voice group
     //
     // @Group Voxizen
     //
@@ -22,8 +22,7 @@ public class PlayerJoinGroupEvent extends ScriptEvent {
     //
     // @Switch id:<id> to only fire for a specific managed group id.
     //
-    // @Triggers when a player joins any Simple Voice Chat group —
-    // both managed (created via voicegroup command) and unmanaged (player-created via SVC UI).
+    // @Triggers when a player joins any Simple Voice Chat group
     //
     // @Context
     // <context.group> returns a VoiceGroupTag of the group being joined.
@@ -31,8 +30,9 @@ public class PlayerJoinGroupEvent extends ScriptEvent {
     //   For unmanaged groups the id is the group's UUID string.
     //
     // @Determine
-    // "cancelled" to prevent the player from joining.
     // VoiceGroupTag to redirect the player into a different group instead.
+    //
+    // @Player Always.
     //
     // -->
 
@@ -44,7 +44,8 @@ public class PlayerJoinGroupEvent extends ScriptEvent {
 
     public PlayerJoinGroupEvent() {
         instance = this;
-        registerCouldMatcher("player joins group");
+        registerCouldMatcher("player joins voice group");
+        registerSwitches("id");
 
         this.<PlayerJoinGroupEvent, VoiceGroupTag>registerOptionalDetermination(null, VoiceGroupTag.class,
                 (event, context, value) -> {

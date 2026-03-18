@@ -30,7 +30,7 @@ public class VoskCommand extends AbstractCommand implements Holdable {
     // @Syntax vosk [bytes:<base64>|...]
     // @Required 1
     // @Maximum 1
-    // @Short Transcribes Opus audio data using Vosk.
+    // @Short Transcribes audio data using Vosk.
     // @Group Voxizen
     //
     // @Description
@@ -42,10 +42,15 @@ public class VoskCommand extends AbstractCommand implements Holdable {
     // <entry[saveName].text> returns the transcribed text as an ElementTag.
     //
     // @Usage
-    // Use to transcribe audio from a microphone event.
-    // on microphone:
-    //   - ~vosk bytes:<[bytes]> save:vosk
-    //   - narrate <entry[vosk].text>
+    // # Use to transcribe audio from a microphone event.
+    // on player microphone:
+    // - if <context.bytes.is_truthy>:
+    //     - flag <player> audio:|:<context.bytes>
+    // - else:
+    //     - ~vosk bytes:<player.flag[audio]||<list>> save:vosk
+    //     - stop if:<entry[vosk].text.is_truthy.not>
+    //     - flag <player> audio:!
+    //     - narrate "You said: <entry[vosk].text>"
     //
     // -->
 

@@ -56,10 +56,10 @@ public class VolumeCategoryCommand extends AbstractCommand {
     // description — optional tooltip text.
     // name_translation_key / description_translation_key — i18n keys (optional).
     //
-    // Use <@link command voicesource> with the category argument to assign a source to a category.
+    // Use voicesource command with the category argument to assign a source to a category.
     //
     // @Usage
-    // - volumecategory create id:music name:Music description:"Background music volume"
+    // - volumecategory create id:music name:Music description:<element[Background music volume]>
     //
     // @Usage
     // # From a file
