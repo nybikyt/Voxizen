@@ -3,6 +3,7 @@ version: '${version}'
 main: dev.nybikyt.voxizen.Voxizen
 author: Nybik_YT
 api-version: '1.21'
+website: https://dsc.gg/dsng
 
 dependencies:
   server:

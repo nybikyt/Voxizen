@@ -17,6 +17,7 @@ import dev.nybikyt.voxizen.events.PlayerMicrophoneEvent;
 import dev.nybikyt.voxizen.misc.VoskService;
 import dev.nybikyt.voxizen.objects.VoiceGroupTag;
 import dev.nybikyt.voxizen.objects.VoiceSourceTag;
+import dev.nybikyt.voxizen.properties.PlayerTagExtensions;
 import dev.nybikyt.voxizen.properties.ServerTagExtensions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,6 +66,7 @@ public final class Voxizen extends JavaPlugin {
     @Override
     public void onEnable() {
         ServerTagExtensions.register();
+        PlayerTagExtensions.register();
 
         saveDefaultConfig();
 
