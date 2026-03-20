@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'dev.nybikyt'
-version = '1.0.0'
+version = '1.0.1'
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ repositories {
         url = "https://maven.citizensnpcs.co/repo"
     }
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
-    maven { url = 'https://alphacephei.com/maven/' } // ← репо для Vosk
+    maven { url = 'https://alphacephei.com/maven/' }
 }
 
 dependencies {
